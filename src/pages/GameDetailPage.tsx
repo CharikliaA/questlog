@@ -5,6 +5,7 @@ import { BASE_URL } from "../api";
 
 export default function GameDetailPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [game, setGame] = useState<Game | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -65,6 +66,32 @@ export default function GameDetailPage() {
     }
   }
 
+  async function deleteGame() {
+    const confirmed = window.confirm(`Delete "${game?.title}"?`);
+    if (!confirmed) {
+      return;
+    }
+    setSaving(true);
+    setActionError(null);
+
+    try {
+      const response = await fetch(`${BASE_URL}/games/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error(`Could not delete the game (error ${response.status})`);
+      }
+
+      navigate("/");
+    } catch (err) {
+      setActionError(
+        err instanceof Error ? err.message : "Something went wrong",
+      );
+      setSaving(false);
+    }
+  }
+
   if (loading) {
     return <p>Loading game...</p>;
   }
@@ -110,13 +137,14 @@ export default function GameDetailPage() {
       <label>
         Rating
         <select
-        value={game.rating ?? ""}
-        onChange={(event) =>
-          updateGame({
-            rating: event.target.value === "" ? null : Number(event.target.value),
-          })
-        }
-        disabled={saving}
+          value={game.rating ?? ""}
+          onChange={(event) =>
+            updateGame({
+              rating:
+                event.target.value === "" ? null : Number(event.target.value),
+            })
+          }
+          disabled={saving}
         >
           <option value="">Not rated</option>
           <option value="1">1</option>
@@ -127,6 +155,9 @@ export default function GameDetailPage() {
         </select>
       </label>
       {game.notes && <p>Notes: {game.notes}</p>}
+      <button onClick={deleteGame} disabled={saving}>
+        Delete game
+      </button>
     </article>
   );
 }
