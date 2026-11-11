@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router";
-import type { Game } from "../types/game";
+import { Link, useNavigate, useParams } from "react-router";
+import type { Game, GameStatus } from "../types/game";
 import { BASE_URL } from "../api";
 
 export default function GameDetailPage() {
@@ -8,6 +8,8 @@ export default function GameDetailPage() {
   const [game, setGame] = useState<Game | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchGame() {
@@ -37,6 +39,30 @@ export default function GameDetailPage() {
     fetchGame();
   }, [id]);
 
+  async function updateGame(changes: Partial<Game>) {
+    setSaving(true);
+    setActionError(null);
+
+    try {
+      const response = await fetch(`${BASE_URL}/games/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(changes),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Could noy update the game (error ${response.status})`);
+      }
+
+      const updateGame: Game = await response.json();
+      setGame(updateGame);
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setSaving(false);
+    }
+  }
+
   if (loading) {
     return <p>Loading game...</p>;
   }
@@ -63,7 +89,22 @@ export default function GameDetailPage() {
       )}
 
       <p>Platform: {game.platform}</p>
-      <p>Status: {game.status}</p>
+      <label>
+        Status
+        <select
+          value={game.status}
+          onChange={(event) =>
+          updateGame({ status: event.target.value as GameStatus })
+          }
+          disabled={saving}
+          >
+            <option value="want">Want to play</option>
+            <option value="playing">Playing</option>
+            <option value="completed">Completed</option>
+            <option value="dropped">Dropped</option>
+            </select>
+        </label>
+        {actionError && <p>{}actionError</p>}
       <p>Rating: {game.rating ?? "Not rated yet"}</p>
       {game.notes && <p>Notes: {game.notes}</p>}
     </article>
