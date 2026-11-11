@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Game, GameStatus } from "../types/game";
 import { BASE_URL } from "../api";
+import { Link } from "react-router";
 
 type Filter = GameStatus | "all";
 
@@ -25,11 +26,11 @@ export default function GamesPage() {
 
       try {
         const url =
-        status === "all"
-        ? `${BASE_URL}/games`
-        : `${BASE_URL}/games?status=${status}`;
+          status === "all"
+            ? `${BASE_URL}/games`
+            : `${BASE_URL}/games?status=${status}`;
 
-        const response = await fetch (url);
+        const response = await fetch(url);
 
         if (!response.ok) {
           throw new Error(`Could not load games (fel ${response.status})`);
@@ -49,35 +50,35 @@ export default function GamesPage() {
 
   return (
     <>
-    <h1>Alla spel</h1>
+      <h1>Alla spel</h1>
 
-    <div>
-      {filters.map((filter) => (
-        <button
-        key={filter.value}
-        onClick={() => setStatus(filter.value)}
-        disabled={status === filter.value}
-        >
-          {filter.label}
-        </button>
-      ))}
-    </div>
-
-    {loading && <p>Loading games...</p>}
-
-    {error && <p>{error}</p>}
-
-    {!loading && !error && games.length === 0 && (
-      <p>No games here yet.</p>
-    )}
-
-    {!loading && !error && (
-      <ul>
-        {games.map((game) => (
-          <li key={game.id}>{game.title}</li>
+      <div>
+        {filters.map((filter) => (
+          <button
+            key={filter.value}
+            onClick={() => setStatus(filter.value)}
+            disabled={status === filter.value}
+          >
+            {filter.label}
+          </button>
         ))}
-      </ul>
-    )}
+      </div>
+
+      {loading && <p>Loading games...</p>}
+
+      {error && <p>{error}</p>}
+
+      {!loading && !error && games.length === 0 && <p>No games here yet.</p>}
+
+      {!loading && !error && (
+        <ul>
+          {games.map((game) => (
+            <li key={game.id}>
+              <Link to={`/games/${game.id}`}>{game.title}</Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </>
-  )
+  );
 }
