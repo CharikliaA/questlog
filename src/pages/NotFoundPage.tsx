@@ -1,3 +1,3 @@
 export default function NotFoundPage() {
-    return <h1>404 - Sidan finns inte</h1>;
+    return <h1>404 - Page not found</h1>;
 }

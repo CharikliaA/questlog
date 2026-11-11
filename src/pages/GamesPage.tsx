@@ -1,19 +1,38 @@
 import { useEffect, useState } from "react";
-import type { Game } from "../types/game";
+import type { Game, GameStatus } from "../types/game";
 import { BASE_URL } from "../api";
+
+type Filter = GameStatus | "all";
+
+const filters: { value: Filter; label: string }[] = [
+  { value: "all", label: "All" },
+  { value: "want", label: "Want to play" },
+  { value: "playing", label: "Playing" },
+  { value: "completed", label: "Completed" },
+  { value: "dropped", label: "Dropped" },
+];
 
 export default function GamesPage() {
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState<Filter>("all");
 
   useEffect(() => {
     async function fetchGames() {
+      setLoading(true);
+      setError(null);
+
       try {
-        const response = await fetch(`${BASE_URL}/games`);
+        const url =
+        status === "all"
+        ? `${BASE_URL}/games`
+        : `${BASE_URL}/games?status=${status}`;
+
+        const response = await fetch (url);
 
         if (!response.ok) {
-          throw new Error(`Kunde inte hämta spelen (fel ${response.status})`);
+          throw new Error(`Could not load games (fel ${response.status})`);
         }
 
         const data: Game[] = await response.json();
@@ -26,26 +45,39 @@ export default function GamesPage() {
     }
 
     fetchGames();
-  }, []);
-
-  if (loading) {
-    return <p>Laddar spel...</p>;
-  }
-  if (error) {
-    return <p>{error}</p>;
-  }
+  }, [status]);
 
   return (
     <>
-      <h1>Alla spel</h1>
+    <h1>Alla spel</h1>
 
-      {games.length === 0 && <p>Du har inga spel än.</p>}
+    <div>
+      {filters.map((filter) => (
+        <button
+        key={filter.value}
+        onClick={() => setStatus(filter.value)}
+        disabled={status === filter.value}
+        >
+          {filter.label}
+        </button>
+      ))}
+    </div>
 
+    {loading && <p>Loading games...</p>}
+
+    {error && <p>{error}</p>}
+
+    {!loading && !error && games.length === 0 && (
+      <p>No games here yet.</p>
+    )}
+
+    {!loading && !error && (
       <ul>
         {games.map((game) => (
           <li key={game.id}>{game.title}</li>
         ))}
       </ul>
+    )}
     </>
-  );
+  )
 }

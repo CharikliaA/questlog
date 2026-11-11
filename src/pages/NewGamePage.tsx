@@ -1,3 +1,3 @@
 export default function NewGamePage() {
-    return <h1>Lägg till spel</h1>;
+    return <h1>Add game</h1>;
 }

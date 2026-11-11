@@ -5,8 +5,8 @@ export default function Layout() {
         <>
         <header>
             <nav>
-                <NavLink to="/">Alla spel</NavLink>
-                <NavLink to="/games/new">Lägg till spel</NavLink>
+                <NavLink to="/">All games</NavLink>
+                <NavLink to="/games/new">Add game</NavLink>
             </nav>
         </header>
 
