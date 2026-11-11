@@ -1,17 +1,8 @@
 import { useEffect, useState } from "react";
-import type { Game, GameStatus } from "../types/game";
+import type { Game, Filter } from "../types/game";
 import { BASE_URL } from "../api";
 import GameCard from "../components/GameCard";
-
-type Filter = GameStatus | "all";
-
-const filters: { value: Filter; label: string }[] = [
-  { value: "all", label: "All" },
-  { value: "want", label: "Want to play" },
-  { value: "playing", label: "Playing" },
-  { value: "completed", label: "Completed" },
-  { value: "dropped", label: "Dropped" },
-];
+import StatusFilter from "../components/StatusFilter";
 
 export default function GamesPage() {
   const [games, setGames] = useState<Game[]>([]);
@@ -33,13 +24,13 @@ export default function GamesPage() {
         const response = await fetch(url);
 
         if (!response.ok) {
-          throw new Error(`Could not load games (fel ${response.status})`);
+          throw new Error(`Could not load games (error ${response.status})`);
         }
 
         const data: Game[] = await response.json();
         setGames(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Något gick fel");
+        setError(err instanceof Error ? err.message : "Something went wrong");
       } finally {
         setLoading(false);
       }
@@ -50,19 +41,9 @@ export default function GamesPage() {
 
   return (
     <>
-      <h1>Alla spel</h1>
+      <h1>All games</h1>
 
-      <div>
-        {filters.map((filter) => (
-          <button
-            key={filter.value}
-            onClick={() => setStatus(filter.value)}
-            disabled={status === filter.value}
-          >
-            {filter.label}
-          </button>
-        ))}
-      </div>
+      <StatusFilter value={status} onChange={setStatus} />
 
       {loading && <p>Loading games...</p>}
 
@@ -73,9 +54,7 @@ export default function GamesPage() {
       {!loading && !error && (
         <ul>
           {games.map((game) => (
-            <li key={game.id}>
-              <GameCard key={game.id} game={game} />
-            </li>
+            <GameCard key={game.id} game={game} />
           ))}
         </ul>
       )}

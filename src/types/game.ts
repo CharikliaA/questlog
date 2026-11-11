@@ -11,3 +11,4 @@ export type Game = {
   createdAt: string;
   updatedAt: string;
 };
+export type Filter = GameStatus | "all";
