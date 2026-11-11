@@ -51,13 +51,15 @@ export default function GameDetailPage() {
       });
 
       if (!response.ok) {
-        throw new Error(`Could noy update the game (error ${response.status})`);
+        throw new Error(`Could not update the game (error ${response.status})`);
       }
 
-      const updateGame: Game = await response.json();
-      setGame(updateGame);
+      const updatedGame: Game = await response.json();
+      setGame(updatedGame);
     } catch (err) {
-      setActionError(err instanceof Error ? err.message : "Something went wrong");
+      setActionError(
+        err instanceof Error ? err.message : "Something went wrong",
+      );
     } finally {
       setSaving(false);
     }
@@ -94,18 +96,36 @@ export default function GameDetailPage() {
         <select
           value={game.status}
           onChange={(event) =>
-          updateGame({ status: event.target.value as GameStatus })
+            updateGame({ status: event.target.value as GameStatus })
           }
           disabled={saving}
-          >
-            <option value="want">Want to play</option>
-            <option value="playing">Playing</option>
-            <option value="completed">Completed</option>
-            <option value="dropped">Dropped</option>
-            </select>
-        </label>
-        {actionError && <p>{}actionError</p>}
-      <p>Rating: {game.rating ?? "Not rated yet"}</p>
+        >
+          <option value="want">Want to play</option>
+          <option value="playing">Playing</option>
+          <option value="completed">Completed</option>
+          <option value="dropped">Dropped</option>
+        </select>
+      </label>
+      {actionError && <p>{actionError}</p>}
+      <label>
+        Rating
+        <select
+        value={game.rating ?? ""}
+        onChange={(event) =>
+          updateGame({
+            rating: event.target.value === "" ? null : Number(event.target.value),
+          })
+        }
+        disabled={saving}
+        >
+          <option value="">Not rated</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+      </label>
       {game.notes && <p>Notes: {game.notes}</p>}
     </article>
   );
