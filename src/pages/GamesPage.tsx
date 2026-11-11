@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Game, GameStatus } from "../types/game";
 import { BASE_URL } from "../api";
-import { Link } from "react-router";
+import GameCard from "../components/GameCard";
 
 type Filter = GameStatus | "all";
 
@@ -74,7 +74,7 @@ export default function GamesPage() {
         <ul>
           {games.map((game) => (
             <li key={game.id}>
-              <Link to={`/games/${game.id}`}>{game.title}</Link>
+              <GameCard key={game.id} game={game} />
             </li>
           ))}
         </ul>
