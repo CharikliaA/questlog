@@ -160,3 +160,29 @@ button:disabled {
   color: var(--text-muted);
   font-size: 0.9rem;
 }
+
+/* Filterknappar */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filters button {
+  background: var(--surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+.filters button:hover:not(:disabled) {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.filters button:disabled {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+  opacity: 1;
+}

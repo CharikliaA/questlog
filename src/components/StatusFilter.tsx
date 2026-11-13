@@ -15,7 +15,7 @@ type StatusFilterProps = {
 
 export default function StatusFilter({ value, onChange }: StatusFilterProps) {
   return (
-    <div>
+    <div className="filters">
       {filters.map((filter) => (
         <button
           key={filter.value}
