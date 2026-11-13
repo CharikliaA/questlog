@@ -3,6 +3,7 @@ import type { SubmitEvent } from "react";
 import { useNavigate } from "react-router";
 import type { Game, GameStatus } from "../types/game";
 import { BASE_URL } from "../api";
+import StatusSelect from "../components/StatusSelect";
 
 export default function NewGamePage() {
   const navigate = useNavigate();
@@ -62,18 +63,7 @@ export default function NewGamePage() {
           />
         </label>
 
-        <label>
-          Status
-          <select
-            value={status}
-            onChange={(event) => setStatus(event.target.value as GameStatus)}
-          >
-            <option value="want">Want to play</option>
-            <option value="playing">Playing</option>
-            <option value="completed">Completed</option>
-            <option value="dropped">Dropped</option>
-          </select>
-        </label>
+        <StatusSelect value={status} onChange={setStatus} />
 
         {error && <p>{error}</p>}
 

@@ -1,7 +1,6 @@
-import type { StaticRouterProps } from "react-router";
 import type { GameStatus } from "../types/game";
 
-type StatusFilterProps = {
+type StatusSelectProps = {
   value: GameStatus;
   onChange: (value: GameStatus) => void;
   disabled?: boolean;
@@ -11,7 +10,7 @@ export default function StatusSelect({
   value,
   onChange,
   disabled = false,
-}: StaticRouterProps) {
+}: StatusSelectProps) {
   return (
     <label>
       Status
@@ -23,7 +22,7 @@ export default function StatusSelect({
         <option value="want">Want to play</option>
         <option value="playing">Playing</option>
         <option value="completed">Completed</option>
-        <option value="Dropped">Dropped</option>
+        <option value="dropped">Dropped</option>
       </select>
     </label>
   );
