@@ -121,7 +121,7 @@ export default function GameDetailPage() {
       <p>Platform: {game.platform}</p>
       <StatusSelect
         value={game.status}
-        onChange={(NewStatus) => updateGame({ status: NewStatus })}
+        onChange={(newStatus) => updateGame({ status: NewStatus })}
         disabled={saving}
       />
       {actionError && <p>{actionError}</p>}
