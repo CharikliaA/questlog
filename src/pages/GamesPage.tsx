@@ -52,7 +52,7 @@ export default function GamesPage() {
       {!loading && !error && games.length === 0 && <p>No games here yet.</p>}
 
       {!loading && !error && (
-        <ul>
+        <ul className="game-grid">
           {games.map((game) => (
             <GameCard key={game.id} game={game} />
           ))}
