@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
-import type { Game, GameStatus } from "../types/game";
+import type { Game } from "../types/game";
 import { BASE_URL } from "../api";
+import StatusSelect from "../components/StatusSelect";
 
 export default function GameDetailPage() {
   const { id } = useParams();
@@ -118,21 +119,11 @@ export default function GameDetailPage() {
       )}
 
       <p>Platform: {game.platform}</p>
-      <label>
-        Status
-        <select
-          value={game.status}
-          onChange={(event) =>
-            updateGame({ status: event.target.value as GameStatus })
-          }
-          disabled={saving}
-        >
-          <option value="want">Want to play</option>
-          <option value="playing">Playing</option>
-          <option value="completed">Completed</option>
-          <option value="dropped">Dropped</option>
-        </select>
-      </label>
+      <StatusSelect
+      value={game.status}
+      onChange={(NewStatus) => updateGame({ status: NewStatus })}
+      disabled={saving}
+      />
       {actionError && <p>{actionError}</p>}
       <label>
         Rating
