@@ -120,9 +120,9 @@ export default function GameDetailPage() {
 
       <p>Platform: {game.platform}</p>
       <StatusSelect
-      value={game.status}
-      onChange={(NewStatus) => updateGame({ status: NewStatus })}
-      disabled={saving}
+        value={game.status}
+        onChange={(NewStatus) => updateGame({ status: NewStatus })}
+        disabled={saving}
       />
       {actionError && <p>{actionError}</p>}
       <label>
@@ -146,7 +146,7 @@ export default function GameDetailPage() {
         </select>
       </label>
       {game.notes && <p>Notes: {game.notes}</p>}
-      <button onClick={deleteGame} disabled={saving}>
+      <button className="danger" onClick={deleteGame} disabled={saving}>
         Delete game
       </button>
     </article>

@@ -232,3 +232,13 @@ select:focus {
 .error {
   color: var(--danger);
 }
+ button.danger {
+  background: transparent;
+  color: #f87171;
+  border: 1px solid #f87171;
+}
+
+button.danger:hover:not(:disabled) {
+  background: #f87171;
+  color: white;
+}
